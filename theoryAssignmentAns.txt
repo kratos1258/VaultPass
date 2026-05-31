@@ -1,0 +1,46 @@
+Question 1: Why is storing plaintext passwords dangerous even in small applications?
+Storing passwords in plaintext is a severe security vulnerability for two primary reasons:
+
+1.The Risk of Credential Stuffing: Users frequently reuse the same password across multiple platforms. If a small application is breached and plaintext credentials are leaked, attackers will use automation to test these combinations on high-value targets like banking, email, and social media platforms.
+
+2.Internal Threat Vector: Plaintext storage exposes credentials to anyone with database access, including developers, administrators, or attackers who gain read-only access via SQL injection.
+
+Question 2: What is the difference between Authentication and Authorization? Include real-world examples.
+The core distinction lies in identity verification versus permission validation:
+
+Authentication (AuthN): The process of verifying who a user is.
+
+Real-World Example: Presenting a passport to a customs officer to prove your identity.
+
+Digital Example: Entering a username and password to log into a banking portal.
+
+Authorization (AuthZ): The process of verifying what an authenticated user is allowed to do.
+
+Real-World Example: A boarding pass granting access to a specific seat in economy class, but denying access to the cockpit.
+
+Digital Example: A logged-in employee being allowed to view their own profile, but receiving a 403 Forbidden error when trying to access the company payroll database.
+
+Question 3: Why is JWT expiration important, and what could happen if tokens never expire?
+JSON Web Tokens (JWTs) are inherently stateless; once issued, they are valid until their internal logic dictates otherwise.
+
+Importance of Expiration: Because the issuing server does not typically check a central database to validate a JWT on every request, the expiration timestamp (exp claim) acts as the primary mechanism to limit the token's lifespan.
+
+Consequences of No Expiration: If a token never expires, it becomes a permanent credential. If an attacker intercepts the token via network sniffing, cross-site scripting (XSS), or malware, they gain indefinite, irrevocable access to the user's account. Even if the legitimate user changes their password, the stolen token remains valid.
+
+Question 4: A hacker gets access to a valid JWT token. What are 3 things you can implement to reduce damage?
+To mitigate the impact of a compromised JWT, the following architectural strategies can be deployed:
+
+1.Short-Lived Access Tokens with Refresh Tokens: Set the access token lifespan to a short window (e.g., 15 minutes). Pair it with a securely stored HttpOnly, Secure refresh token to request new access tokens, minimizing the hacker's window of opportunity.
+
+2.Token Blacklisting / Revocation Lists: Implement a fast, in-memory data store (like Redis) to log revoked token identifiers (jti). When a user logs out or anomalous activity is detected, the token ID is blacklisted until its natural expiration time passes.
+
+3.Contextual Fingerprinting: Embed client-specific metadata inside the token payload, such as a hash of the user’s IP address or User-Agent. If a request arrives with a valid token but from an entirely different geographic location or device context, the server rejects it.
+
+Question 5: Why should logging systems be treated as sensitive infrastructure?
+1.Logging systems are high-value targets for attackers and require strict security controls due to the following risks:
+
+2.Accidental Data Leakage: Application logs frequently suffer from "log leakage," where developers inadvertently write sensitive data—such as personally identifiable information (PII), session tokens, API keys, or plaintext credentials—into log files during debugging.
+
+3.System Blueprinting: Detailed error logs and stack traces outline the inner workings of an application. Attackers who compromise a logging system can map out the architecture, identify specific software versions, and uncover unpatched vulnerabilities to orchestrate a deeper exploit.
+
+4.Log Injection Exploits: If log inputs are not sanitized, malicious actors can inject payloads into log strings designed to exploit the log viewer or administrative tools analyzing the data (as demonstrated by the Log4j vulnerability).
