@@ -7,7 +7,8 @@ const connectDb = require("./src/config/db");
 const userRoutes = require("./src/routes/user.routes");
 const { registration, login } = require("./src/controllers/user.contollers");
 const adminRoutes = require("./src/routes/admin.routes");
-
+const publicRoutes = require("./src/routes/public.routes");
+const moderatorRoutes = require("./src/routes/moderator.routes")
 
 
 //middlewares
@@ -24,6 +25,9 @@ app.get("/", (req,res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/public", publicRoutes);
+app.use("/api/moderator", moderatorRoutes);
+
 
 app.listen(port, () => {
     connectDb();
