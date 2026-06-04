@@ -26,7 +26,7 @@ app.get("/", (req,res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/public", publicRoutes);
-app.use("/api/moderator", moderatorRoutes);
+//app.use("/api/moderator", moderatorRoutes);
 
 
 app.listen(port, () => {
