@@ -82,7 +82,9 @@ const makeAdmin = async (req, res ) => {
 };
 
 const getUsers = async (req, res) => {
-    //const isAdmin = req.user.role !== "admin";
+    if(req.user.role !== "admin") {
+        return res.status(403).json({message: "You are not authorized to perform this action"});
+    }
     try {
         const users = await User.find().select("-password");
         return res.status(200).json({ users });

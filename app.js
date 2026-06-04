@@ -6,6 +6,7 @@ const app = express();
 const connectDb = require("./src/config/db");
 const userRoutes = require("./src/routes/user.routes");
 const { registration, login } = require("./src/controllers/user.contollers");
+const adminRoutes = require("./src/routes/admin.routes");
 
 
 
@@ -22,6 +23,7 @@ app.get("/", (req,res) => {
 // routes
 
 app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.listen(port, () => {
     connectDb();
